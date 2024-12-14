@@ -1,186 +1,191 @@
 # Genetic Algorithm Lineage Visualizer
 
-A Python library for visualizing the evolution of a genetic algorithm's population using a graph-based family tree. This module allows you to track individuals, their lineage (parental crossover), and mutations over multiple generations. It provides an easy-to-use interface for adding individuals and their relationships, as well as a visualization tool to view the family tree.
+A Python library for managing and visualizing the evolution of populations in genetic algorithms. The **GeneticAnalyzer** library tracks individuals, their lineage through crossovers and mutations, and provides intuitive visualizations of the family tree. This tool is perfect for understanding and presenting the evolutionary process.
+
+> **Note**: The **GeneticAnalyzer** library uses **graphviz** to generate graphs, so make sure you have it installed and configured correctly.
+> Refer to the [Graphviz Installation Guide](https://pygraphviz.github.io/documentation/stable/install.html) for platform-specific instructions.
 
 ---
 
 ## Features
 
-- **Track Population Lineage**: Add individuals, track their parents, and log mutation details.
-- **Visualize Evolution Tree**: Generate a family tree graph of the population to see how individuals evolved over generations.
-- **Highlight Best Individual**: Highlight the best-performing individual and trace its lineage back to the root.
-- **Customizable Fitness Function**: Use your own fitness function to evaluate individuals.
+- **Track Lineage**: Log individuals, parental relationships, and mutations across generations.
+- **Visualize Family Tree**: Generate a graph of the population's lineage to trace genetic evolution.
+- **Highlight Best Individuals**: Mark the highest-performing individual and trace their ancestry.
+- **Customizable Workflows**: Integrate with any fitness function, mutation, or crossover mechanism.
 
 ---
 
 ## Installation
 
-1. Clone this repository:
+1. Clone the repository:
 
    ```bash
    git clone https://github.com/MemerGamer/GeneticAnalyzer.git
    cd GeneticAnalyzer
    ```
 
-2. Install the required dependencies:
+2. Install dependencies:
 
    ```bash
-   cd analyzer
    pip install -r requirements.txt
    ```
 
-   > **Note:** `pygraphviz` requires Graphviz to be installed on your system. Refer to the [Graphviz Installation Guide](https://pygraphviz.github.io/documentation/stable/install.html) for your platform.
+3. Install **Graphviz** (required by `pygraphviz`):
+
+   Refer to the [Graphviz Installation Guide](https://pygraphviz.github.io/documentation/stable/install.html) for platform-specific instructions.
 
 ---
 
 ## Usage
 
-### Library: `analyzer.py`
+### Overview
 
-The main library file defines the `GeneticAnalyzer` class, which provides methods for managing the population, tracking lineage, and visualizing the evolutionary tree.
+The **GeneticAnalyzer** class provides an easy-to-use interface to track the population's evolution and visualize its lineage. The main methods include:
 
-#### Example
+- **`add_individual`**: Add an individual with optional parent relationships and mutation details.
+- **`visualize_tree`**: Generate a graphical representation of the population's lineage.
+- **`plot_fitness_over_generations`**: Plot the average fitness across generations.
+
+### Example Usage
+
+Below is an example of using **GeneticAnalyzer** in a Python script to track and visualize population evolution.
+
+#### Example Script
 
 ```python
 from analyzer import GeneticAnalyzer
 
-# Initialize the analyzer
+# Initialize the GeneticAnalyzer
 analyzer = GeneticAnalyzer()
 
 # Add individuals to the population
-individual_1 = {"genes": [0, 1, 1, 0, 1], "fitness": 3.0}
-individual_2 = {"genes": [1, 0, 0, 1, 1], "fitness": 2.5}
-id_1 = analyzer.add_individual(individual_1)
-id_2 = analyzer.add_individual(individual_2)
+individual_1 = {"genes": [1, 0, 1, 1, 0], "fitness": 3.0}
+individual_2 = {"genes": [0, 1, 0, 1, 1], "fitness": 2.5}
+id_1 = analyzer.add_individual(individual_1, generation=0)
+id_2 = analyzer.add_individual(individual_2, generation=0)
 
-# Add a child through crossover and mutation
-child = {"genes": [0, 1, 0, 1, 1], "fitness": 3.5}
-analyzer.add_individual(child, parents=[id_1, id_2], mutation_info="Bit flip at index 2")
+# Create a child via crossover and mutation
+child = {"genes": [1, 1, 1, 1, 0], "fitness": 4.0}
+child_id = analyzer.add_individual(child, parents=[id_1, id_2], mutation_info="Bit flip", generation=1)
 
 # Visualize the family tree
-analyzer.visualize_tree(highlight_best=2)  # Highlight the child
+analyzer.visualize_tree(highlight_best=child_id)
+
+# Plot fitness over generations
+analyzer.plot_fitness_over_generations()
 ```
 
----
+### Visualization Output
 
-### Test Script: `main.ipynb`
+1. **Family Tree**: A directed graph showing the lineage of individuals, with:
 
-The `main.ipynb` file demonstrates the use of the library by simulating a simple genetic algorithm. It evolves a population of binary individuals to maximize their sum.
+   - Nodes representing individuals (labeled with fitness scores).
+   - Edges representing parent-child relationships via crossover or mutation.
+   - Best individual highlighted in **orange**.
+   - Lineage path traced in **red**.
 
-#### How It Works
-
-1. **Initialization**:
-
-   - A random population of binary individuals is created.
-   - Each individual is evaluated using a simple fitness function: the sum of its binary values.
-
-2. **Evolution**:
-
-   - Over multiple generations, individuals are selected for reproduction based on their fitness.
-   - Crossover and mutation create new individuals.
-   - The lineage, including parent relationships and mutations, is logged in the analyzer.
-
-3. **Visualization**:
-   - At the end of the evolution, the family tree is visualized.
-   - The best individual is highlighted, and its lineage is traced back to the root.
-
-#### Run the Test
-
-To run the test script with jupyter notebook.
-
-#### Example Output
-
-The script will print the fitness of each generation and display a graph showing the lineage of individuals. The graph will:
-
-- Highlight the best-performing individual in orange.
-- Trace the path from the root to the best individual in red (if it exists).
-
----
-
-## Code Structure
-
-- **`analyzer.py`**: Contains the `GeneticAnalyzer` class for managing the population and visualizing the lineage.
-- **`main.ipynb`**: A test script that demonstrates the library's functionality with a simple genetic algorithm.
+2. **Fitness Plot**: A line graph showing the average fitness of the population over generations.
 
 ---
 
 ## Key Methods
 
-### `GeneticAnalyzer` Class
+### `GeneticAnalyzer.add_individual`
 
-| Method                                                         | Description                                                                                |
-| -------------------------------------------------------------- | ------------------------------------------------------------------------------------------ |
-| `add_individual(individual, parents=None, mutation_info=None)` | Adds an individual to the population. Tracks parent relationships and mutations.           |
-| `visualize_tree(highlight_best=None)`                          | Visualizes the family tree of the population. Highlights the best individual if specified. |
-| `_get_path_from_root(target)`                                  | Internal method to find the lineage path from the root to a specific individual.           |
+Adds an individual to the population and records relationships.
 
----
+| Parameter       | Type              | Description                                                |
+| --------------- | ----------------- | ---------------------------------------------------------- |
+| `individual`    | `dict`            | Contains `genes` (list) and `fitness` (float).             |
+| `parents`       | `list` (optional) | List of parent IDs.                                        |
+| `mutation_info` | `str` (optional)  | Description of mutation applied.                           |
+| `generation`    | `int` (optional)  | Generation to which this individual belongs. Default: `0`. |
 
-## Visualization Example
-
-The graph generated by `visualize_tree()` will look similar to the following structure:
-
-![Family Tree](demo.jpg)
-
-- Nodes represent individuals, labeled with their fitness scores.
-- Edges represent relationships (crossover or mutation).
-- The best individual is highlighted in **orange**, and its path is traced in **red** (if it exists).
+Returns the unique ID of the individual.
 
 ---
 
-## Customization
+### `GeneticAnalyzer.visualize_tree`
 
-You can modify the following parameters in the test script (`main.py`):
+Generates a visual representation of the family tree.
 
-1. **Fitness Function**:
-   Replace the `fitness_function()` with your own logic to evaluate individuals.
+| Parameter        | Type             | Description                                                                     |
+| ---------------- | ---------------- | ------------------------------------------------------------------------------- |
+| `highlight_best` | `int` (optional) | ID of the best individual to highlight in **orange**.                           |
+| `layout`         | `str` (optional) | Layout style (`"dot"`, `"spring"`, `"circular"`, `"random"`). Default: `"dot"`. |
+
+---
+
+### `GeneticAnalyzer.plot_fitness_over_generations`
+
+Plots the average fitness of the population across generations.
+
+No parameters required.
+
+---
+
+## Advanced Customization
+
+1. **Fitness Function**:  
+   Replace the fitness function to evaluate individuals based on your custom criteria.
 
    ```python
    def fitness_function(individual):
-       # Custom fitness function
-       return sum(individual)
+       return sum(individual)  # Example: maximize the sum of binary genes
    ```
 
-2. **Genetic Operators**:
-   Adjust the `mutate()` and `crossover()` functions to use custom mutation or crossover mechanisms.
-
-3. **Population Parameters**:
-   Modify the size of the population, the number of generations, the mutation rate, and the individual size.
+2. **Mutation**:  
+   Modify the mutation mechanism to suit your requirements.
 
    ```python
-   population_size = 10
-   generations = 5
-   individual_size = 6
-   mutation_rate = 0.2
+   def mutate(individual, mutation_rate=0.1):
+       for i in range(len(individual)):
+           if random.random() < mutation_rate:
+               individual[i] = 1 - individual[i]  # Flip binary bit
+       return individual
+   ```
+
+3. **Crossover**:  
+   Customize the crossover strategy to combine parent genes.
+
+   ```python
+   def crossover(parent1, parent2):
+       point = random.randint(1, len(parent1) - 1)
+       return parent1[:point] + parent2[point:], parent2[:point] + parent1[point:]
    ```
 
 ---
 
-## Prerequisites
+## Visualization Notes
+
+- **Node Colors**: Nodes are colored dynamically based on fitness scores (normalized to a colormap).
+- **Edge Colors**:
+  - Blue: Crossover relationships.
+  - Purple: Mutations.
+- **Best Individual**:
+  - Highlighted in **orange**.
+  - Lineage traced in **red** from the root (oldest ancestor) to the individual.
+
+---
+
+## Requirements
 
 - Python 3.7 or higher
-- Required Python Libraries:
+- Libraries:
   - `matplotlib`
   - `networkx`
   - `pygraphviz`
-- **Graphviz**: Ensure that Graphviz is installed and available in your system path.
-
----
-
-## Future Improvements
-
-- Add support for different fitness visualization (e.g., plotting fitness over generations).
-- Introduce additional graph layouts for better scalability with larger populations.
-- Allow more customizable node/edge styles (e.g., color-coding based on fitness or mutation type).
+- **Graphviz**: Ensure Graphviz is installed on your system.
 
 ---
 
 ## License
 
-This project is licensed under the GPLv3 License. See the [LICENSE](./LICENSE) file for details.
+This project is licensed under the GPLv3 License. See the [LICENSE](LICENSE) file for details.
 
 ---
 
 ## Author
 
-Developed by Kovács Bálint-Hunor (MemerGamer). Contributions and suggestions are welcome!
+Developed by **Kovács Bálint-Hunor (MemerGamer)**. Contributions and suggestions are welcome!
