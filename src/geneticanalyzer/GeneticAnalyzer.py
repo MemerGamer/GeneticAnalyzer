@@ -4,6 +4,18 @@ import matplotlib.pyplot as plt
 
 class GeneticAnalyzer:
     def __init__(self):
+        """
+        Initialize GeneticAnalyzer object.
+
+        The GeneticAnalyzer is responsible for tracking a population, their
+        lineage, and historical data. This object is used to visualize the
+        evolution of a population over time.
+
+        :param population: List of individuals in the population
+        :param lineage: Directed graph for storing the population's lineage
+        :param generation: Current generation number
+        :param history: List of historical data
+        """
         self.population = []
         self.lineage = nx.DiGraph()  # Directed graph for lineage
         self.generation = 0
@@ -12,6 +24,15 @@ class GeneticAnalyzer:
     def add_individual(
         self, individual, parents=None, mutation_info=None, generation=0
     ):
+        """
+        Add an individual to the population.
+
+        :param individual: A dictionary containing the individual's details
+        :param parents: List of parent nodes in the lineage
+        :param mutation_info: Mutation information associated with the individual
+        :param generation: Generation number of the individual
+        :return: The node ID of the added individual
+        """
         node_id = len(self.population)
         self.population.append(individual)
         self.lineage.add_node(
@@ -31,7 +52,23 @@ class GeneticAnalyzer:
         return node_id
 
     def plot_fitness_over_generations(self):
+        """
+        Plot the average fitness of the population across generations.
+
+        This function groups individuals' fitness values by their generation,
+        calculates the average fitness for each generation, and plots these
+        averages over generations using a line graph.
+
+        The x-axis represents the generation number, and the y-axis represents
+        the average fitness score. The graph includes markers for each
+        generation, a grid for better readability, and a legend indicating
+        the plotted data series.
+
+        The plot is displayed using matplotlib and will show a visual trend
+        of how the average fitness of the population evolves over time.
+        """
         # Group fitness values by generation
+
         generations = {}
         for node, data in self.lineage.nodes(data=True):
             generation = data["details"].get("generation", 0)
@@ -56,6 +93,26 @@ class GeneticAnalyzer:
     def visualize_tree(
         self, highlight_best=None, layout="dot", node_style=None, edge_style=None
     ):
+        """
+        Visualize the family tree of the population as a directed graph.
+
+        This method creates a visualization of the population's lineage using a
+        directed graph. The graph is laid out according to the specified
+        layout, and nodes are colored based on their fitness scores. Edges are
+        colored based on the type of relationship they represent. The graph
+        includes labels with the fitness values for each individual.
+
+        If a node ID is provided for `highlight_best`, the best individual is
+        highlighted in orange, and its lineage is traced from the root node to
+        the individual in red.
+
+        The graph is displayed using matplotlib.
+
+        :param highlight_best: Node ID of the best individual to highlight
+        :param layout: Layout style for the graph ("dot", "spring", "circular", "random")
+        :param node_style: Dictionary of node styles (e.g. node_size, node_color)
+        :param edge_style: Dictionary of edge styles (e.g. width, edge_color)
+        """
         if layout == "dot":
             pos = nx.nx_agraph.graphviz_layout(
                 self.lineage, prog="dot", args="-Gnodesep=0.5 -Granksep=1.5"
@@ -137,8 +194,22 @@ class GeneticAnalyzer:
         plt.show()
 
     def _get_path_from_root(self, target):
+        """
+        Finds the path from the oldest ancestor to the target node in the
+        lineage graph.
+
+        The method starts by finding all root nodes (nodes with no
+        predecessors) in the graph. If there are multiple roots, it will try
+        each one in turn to find a path to the target node. If a path is found,
+        it is returned. If no path is found, the method returns None.
+
+        :param target: The node to find the path to
+        :return: The path from the oldest ancestor to the target node, or None
+        """
+
         # Traverse the tree from the oldest ancestor to the target node
         # Find all root nodes (nodes with no predecessors)
+
         roots = [
             node
             for node in self.lineage.nodes

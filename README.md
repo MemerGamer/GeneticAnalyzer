@@ -18,6 +18,14 @@ A Python library for managing and visualizing the evolution of populations in ge
 
 ## Installation
 
+### Using pip
+
+```bash
+pip install geneticanalyzer
+```
+
+### Manually
+
 1. Clone the repository:
 
    ```bash
@@ -49,6 +57,8 @@ The **GeneticAnalyzer** class provides an easy-to-use interface to track the pop
 
 ### Example Usage
 
+See examples in the [**GeneticAnalyzerExamples** repository](https://github.com/MemerGamer/GeneticAnalyzerExamples).
+
 Below is an example of using **GeneticAnalyzer** in a Python script to track and visualize population evolution.
 
 #### Example Script
@@ -77,6 +87,8 @@ analyzer.plot_fitness_over_generations()
 ```
 
 ### Visualization Output
+
+![demo](./demo.png)
 
 1. **Family Tree**: A directed graph showing the lineage of individuals, with:
 
