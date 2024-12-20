@@ -88,7 +88,7 @@ analyzer.plot_fitness_over_generations()
 
 ### Visualization Output
 
-![demo](./demo.png)
+![demo](https://raw.githubusercontent.com/MemerGamer/GeneticAnalyzer/refs/heads/main/demo.png)
 
 1. **Family Tree**: A directed graph showing the lineage of individuals, with:
 
