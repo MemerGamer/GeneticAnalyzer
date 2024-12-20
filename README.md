@@ -185,10 +185,19 @@ No parameters required.
 
 - Python 3.7 or higher
 - Libraries:
+
   - `matplotlib`
   - `networkx`
   - `pygraphviz`
+  - `scipy`
+
 - **Graphviz**: Ensure Graphviz is installed on your system.
+
+---
+
+## Star History
+
+[![Star History Chart](https://api.star-history.com/svg?repos=MemerGamer/GeneticAnalyzer&type=Date)](https://star-history.com/#MemerGamer/GeneticAnalyzer&Date)
 
 ---
 
