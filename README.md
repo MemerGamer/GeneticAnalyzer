@@ -64,7 +64,7 @@ Below is an example of using **GeneticAnalyzer** in a Python script to track and
 #### Example Script
 
 ```python
-from analyzer import GeneticAnalyzer
+from geneticanalyzer import GeneticAnalyzer
 
 # Initialize the GeneticAnalyzer
 analyzer = GeneticAnalyzer()
